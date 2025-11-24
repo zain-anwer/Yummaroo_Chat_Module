@@ -1,11 +1,22 @@
 import express from 'express';
+import {signup, login, logout, updateProfile} from '../controllers/auth.controller.js'
+import {protectRoute} from '../middleware/auth.middleware.js';
+import {arcjetProtection} from '../middleware/arcjet.middleware.js';
 
 const router = express.Router();
 
-router.get("/signup", (req,res) => {res.send("Signup Endpoint");});
+// .use function is probably used to provide the middleware function
 
-router.get("/signin", (req,res) => {res.send("Signin Endpoint");});
+//router.use(arcjetProtection);
 
-router.get("/login", (req,res) => {res.send("Login Endpoint");});
+router.post("/signup", signup);
+
+router.post("/login", login);
+
+router.post("/logout", logout);
+
+router.put("/update-profile",protectRoute,updateProfile)
+
+router.get("/check",protectRoute, (req,res) => res.status(200).json(req.user));
 
 export default router;
